@@ -1,0 +1,3 @@
+import customtkinter
+
+customtkinter.mainloop()
