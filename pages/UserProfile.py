@@ -55,5 +55,8 @@ class ProfileWindow(tk.Frame):
     def submit(self):
         username = self.userNameEntry.get()
         email = self.emailEntry.get()
-        print("Submitted", {username, email})
+        userProfile = {"username": username, "email": email}
+        storeFileName = "store/UserProfile.json"
+        print(userProfile)
+        utils.write_to_json(userProfile, storeFileName)
         pass
