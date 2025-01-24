@@ -1,5 +1,5 @@
 import tkinter as tk
-import pages.UserProfile as UserProfile
+from pages.UserProfile import ProfileWindow
 
 """
 Main module for the SmartStudy application.
@@ -7,17 +7,25 @@ Main module for the SmartStudy application.
 This module initializes the main window using the customtkinter library.
 """
 
-
-# CONFIGURATIONS
-root = tk.Tk()
-root.title("SmartStudy")
-root.geometry("1000x800")
-
-# ------------------ WIDGETS ------------------
-userprofile = UserProfile.ProfileWindow(root)
+pages = [ProfileWindow]
 
 
-# ------------------ WIDGETS ------------------
+class App(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("SmartStudy")
+        self.geometry("1000x800")
+        self.pages = {}
+
+        # * initialize and store all pages
+        for page in pages:
+            self.pages[page.__name__] = page(self)
+
+    def show_page(self, page_name):
+        self.pages[page_name].tkraise()
+
 
 # START APPLICATION
-root.mainloop()
+app = App()
+app.show_page(ProfileWindow.__name__)
+app.mainloop()
