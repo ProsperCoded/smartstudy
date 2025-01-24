@@ -1,5 +1,6 @@
 import tkinter as tk
-from pages.UserProfile import ProfileWindow
+from pages.ProfileWindow import ProfileWindow
+from pages.Welcome import WelcomeWindow
 
 """
 Main module for the SmartStudy application.
@@ -7,7 +8,7 @@ Main module for the SmartStudy application.
 This module initializes the main window using the customtkinter library.
 """
 
-pages = [ProfileWindow]
+pages = [WelcomeWindow, ProfileWindow]
 
 
 class App(tk.Tk):
@@ -17,9 +18,19 @@ class App(tk.Tk):
         self.geometry("1000x800")
         self.pages = {}
 
+        # Container for pages
+        container = tk.Frame(self)
+        container.pack(fill="both", expand=True)
+
+        # allow container to expand
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
         # * initialize and store all pages
         for page in pages:
-            self.pages[page.__name__] = page(self)
+            initializedPage = page(parent=container)
+            initializedPage.grid(row=0, column=0, sticky="nsew")
+            self.pages[page.__name__] = initializedPage
 
     def show_page(self, page_name):
         self.pages[page_name].tkraise()
@@ -27,5 +38,5 @@ class App(tk.Tk):
 
 # START APPLICATION
 app = App()
-app.show_page(ProfileWindow.__name__)
+app.show_page(WelcomeWindow.__name__)
 app.mainloop()

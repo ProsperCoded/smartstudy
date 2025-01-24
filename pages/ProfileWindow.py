@@ -5,11 +5,11 @@ from lib.theme import PRIMARY_COLOR
 
 class Profile:
     username: str
-    firstName: str
-    lastName: str
+    email: str
 
-    def __init__(self, username: str, age: int, firstName, lastName):
+    def __init__(self, username: str, email: str):
         self.username = username
+        self.email = email
 
 
 class ProfileWindow(tk.Frame):
@@ -19,8 +19,9 @@ class ProfileWindow(tk.Frame):
         super().__init__(parent)
         container = tk.Frame(self)
         container.config(bg=self.backgroundColor, padx=20, pady=20)
+        # container.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        container.pack(expand=True)
         # ? Place at the center
-        container.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         # Add widgets to container
         tk.Label(
@@ -45,12 +46,12 @@ class ProfileWindow(tk.Frame):
         self.emailEntry = tk.Entry(widgetFrame, width=30, bg=self.backgroundColor)
         self.emailEntry.pack()
 
-        self.pack(fill=tk.BOTH, expand=True)
-
         submitButton = tk.Button(
             container, text="SUBMIT", bg=PRIMARY_COLOR, fg="white", command=self.submit
         )
         submitButton.pack(pady=10)
+
+        # self.pack(fill=tk.BOTH, expand=True)
 
     def submit(self):
         username = self.userNameEntry.get()
