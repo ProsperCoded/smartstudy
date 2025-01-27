@@ -1,6 +1,6 @@
 import tkinter as tk
 from lib.theme import PRIMARY_COLOR
-from ProfileWindow import ProfileWindow
+from pages.ProfileWindow import ProfileWindow  # Updated import path
 
 
 class WelcomeWindow(tk.Frame):

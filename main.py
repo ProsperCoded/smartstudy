@@ -1,6 +1,7 @@
 import tkinter as tk
 from pages.ProfileWindow import ProfileWindow
 from pages.Welcome import WelcomeWindow
+from pages.Timetable import Timetable
 
 """
 Main module for the SmartStudy application.
@@ -8,7 +9,7 @@ Main module for the SmartStudy application.
 This module initializes the main window using the customtkinter library.
 """
 
-pages = [WelcomeWindow, ProfileWindow]
+pages = [WelcomeWindow, ProfileWindow, Timetable]
 
 
 class App(tk.Tk):
@@ -38,5 +39,5 @@ class App(tk.Tk):
 
 # START APPLICATION
 app = App()
-app.show_page(WelcomeWindow.__name__)
+app.show_page(Timetable.__name__)
 app.mainloop()
