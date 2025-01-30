@@ -1,9 +1,10 @@
 {
     "Monday": [],
-    "Tuesday": [],
+    "Tuesday": [
+        "MAT141"
+    ],
     "Wednesday": [
-        "fffff",
-        "CSC102"
+        "CSC103"
     ],
     "Thursday": [],
     "Friday": [],
