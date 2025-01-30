@@ -44,10 +44,16 @@ class App(tk.Tk):
         self.pages[page_name].tkraise()
 
     def startTimer(self):
-        pass
+        self.pages["Studying"].update_study_info()
+        self.show_page("Studying")
 
     def stopTimer(self):
-        pass
+        self.pages["Studying"].stop_timer()
+
+    def stop_study(self):
+        if self.studying:
+            self.pages["Studying"].stop_timer()
+            self.show_page("MainPage")
 
 
 # START APPLICATION

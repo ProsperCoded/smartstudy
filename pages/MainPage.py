@@ -29,7 +29,18 @@ class MainPage(tk.Frame):
         menubar = tk.Menu(self.parent)
         self.parent.master.config(menu=menubar)
 
-        # File menu
+        # Home Menu
+        home_menu = tk.Menu(menubar, tearoff=0)
+        menubar.add_cascade(label="Home", menu=home_menu)
+        home_menu.add_command(
+            label="Home", command=lambda: self.navigate_to("MainPage")
+        )
+        home_menu.add_command(
+            label="Studying",
+            command=lambda: self.navigate_to("Studying"),
+        )
+
+        # Settings menu
         file_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Settings", menu=file_menu)
         file_menu.add_command(
@@ -39,6 +50,9 @@ class MainPage(tk.Frame):
             label="Upload Materials",
             command=lambda: self.navigate_to("UploadMaterials"),
         )
+
+        file_menu.add_separator()
+        file_menu.add_command(label="Start Study", command=self.start_todays_study)
 
         # Profile menu
         profile_menu = tk.Menu(menubar, tearoff=0)
@@ -162,18 +176,25 @@ class MainPage(tk.Frame):
                 "duration": 0,
                 "material": material_path,
             }
+            self.master.master.startTimer()
         else:
             messagebox.showerror("Error", "Material file not found!")
 
-    # def start_todays_study(self):
-    #     current_day = datetime.now().strftime("%A")
-    #     todays_courses = self.timetable.get(current_day, [])
+    def start_todays_study(self):
+        current_day = datetime.now().strftime("%A")
+        todays_courses = self.timetable.get(current_day, [])
 
-    #     if todays_courses:
-    #         course = todays_courses[0]  # Take first course
-    #         material = self.materials_df[self.materials_df["course"] == course]
+        if not todays_courses:
+            messagebox.showinfo("No Courses", "No courses scheduled for today!")
+            return
 
-    #         if not material.empty:
-    #             self.open_material(material.iloc[0]["material"])
-    #         else:
-    #             messagebox.showinfo("Note", "No material found for today's course")
+        # Find first available material for today's courses
+        for course in todays_courses:
+            course_materials = self.materials_df[self.materials_df["course"] == course]
+            if not course_materials.empty:
+                self.open_material(course, course_materials.iloc[0]["material"])
+                break
+        else:
+            messagebox.showwarning(
+                "No Materials", "No study materials found for today's courses!"
+            )
