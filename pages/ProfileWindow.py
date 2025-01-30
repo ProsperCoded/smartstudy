@@ -57,7 +57,7 @@ class ProfileWindow(tk.Frame):
         username = self.userNameEntry.get()
         email = self.emailEntry.get()
         userProfile = {"username": username, "email": email}
-        storeLocation = "store/UserProfile.json"
+        storeLocation = "store/profile.json"
         print(userProfile)
         utils.write_to_json(userProfile, storeLocation)
         pass

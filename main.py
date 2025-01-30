@@ -4,6 +4,7 @@ from pages.Welcome import WelcomeWindow
 from pages.Timetable import Timetable
 from pages.UploadMaterials import UploadMaterials
 from pages.MainPage import MainPage
+from pages.Studying import Studying
 
 """
 Main module for the SmartStudy application.
@@ -11,7 +12,7 @@ Main module for the SmartStudy application.
 This module initializes the main window using the customtkinter library.
 """
 
-pages = [WelcomeWindow, ProfileWindow, Timetable, UploadMaterials, MainPage]
+pages = [WelcomeWindow, ProfileWindow, Timetable, UploadMaterials, MainPage, Studying]
 
 
 class App(tk.Tk):
@@ -31,6 +32,8 @@ class App(tk.Tk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
+        # variable to store what is currently being studied
+        self.studying = None
         # * initialize and store all pages
         for page in pages:
             initializedPage = page(parent=container)
@@ -39,6 +42,12 @@ class App(tk.Tk):
 
     def show_page(self, page_name):
         self.pages[page_name].tkraise()
+
+    def startTimer(self):
+        pass
+
+    def stopTimer(self):
+        pass
 
 
 # START APPLICATION

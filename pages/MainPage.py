@@ -16,6 +16,7 @@ class MainPage(tk.Frame):
 
         # Load timetable
         self.timetable = load_from_json("store/timetable.json")
+        self.profile = load_from_json("store/profile.json")
         try:
             self.materials_df = pd.read_excel("store/materials.xlsx")
         except FileNotFoundError:
@@ -51,6 +52,13 @@ class MainPage(tk.Frame):
         container.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 
         # Header
+        tk.Label(
+            container,
+            text=f"Welcome {self.profile['username'].split(' ')[0].title()}!",
+            font=("Helvatical", 15, "bold"),
+            bg=self.backgroundColor,
+            fg=PRIMARY_COLOR,
+        ).pack(pady=20)
         tk.Label(
             container,
             text="SMART STUDY DASHBOARD",
@@ -102,7 +110,7 @@ class MainPage(tk.Frame):
             tk.Button(
                 frame,
                 text="START STUDY",
-                command=lambda m=row["material"]: self.open_material(m),
+                command=lambda m=row["material"]: self.open_material(row["course"], m),
                 bg=PRIMARY_COLOR,
                 fg="white",
             ).pack(side=tk.RIGHT, padx=5)
@@ -129,28 +137,43 @@ class MainPage(tk.Frame):
     def navigate_to(self, page_name):
         self.parent.master.show_page(page_name)
 
+    def recordStudyTime(self, course, duration, start, current):
+        # Placeholder - implement tracking logic
+        pass
+
     def get_unengaged_courses(self):
         # Placeholder - implement tracking logic
         return []
 
-    def open_material(self, material_path):
+    def open_material(self, course, material_path):
         if os.path.exists(material_path):
             if os.name == "posix":  # For Linux
                 os.system(f'xdg-open "{material_path}"')
             elif os.name == "nt":  # For Windows
                 os.system(f"open {material_path}")
+            else:
+                messagebox.showerror("Error", "Can't open file on this OS!")
+                return
+            startTime = datetime.now()
+            self.master.studying = {
+                "course": course,
+                "start": startTime,
+                "current": startTime,
+                "duration": 0,
+                "material": material_path,
+            }
         else:
             messagebox.showerror("Error", "Material file not found!")
 
-    def start_todays_study(self):
-        current_day = datetime.now().strftime("%A")
-        todays_courses = self.timetable.get(current_day, [])
+    # def start_todays_study(self):
+    #     current_day = datetime.now().strftime("%A")
+    #     todays_courses = self.timetable.get(current_day, [])
 
-        if todays_courses:
-            course = todays_courses[0]  # Take first course
-            material = self.materials_df[self.materials_df["course"] == course]
+    #     if todays_courses:
+    #         course = todays_courses[0]  # Take first course
+    #         material = self.materials_df[self.materials_df["course"] == course]
 
-            if not material.empty:
-                self.open_material(material.iloc[0]["material"])
-            else:
-                messagebox.showinfo("Note", "No material found for today's course")
+    #         if not material.empty:
+    #             self.open_material(material.iloc[0]["material"])
+    #         else:
+    #             messagebox.showinfo("Note", "No material found for today's course")
