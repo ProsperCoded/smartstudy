@@ -24,7 +24,6 @@ class Timetable(tk.Frame):
 
         # Dictionary to store courses for each day
         self.stored_courses = load_from_json("store/timetable.json")
-        print("stored_courses", self.stored_courses)
         if not self.stored_courses:
             self.stored_courses = {day: [] for day in self.days}
         self.courses = {day: [] for day in self.days}
