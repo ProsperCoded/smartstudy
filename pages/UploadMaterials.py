@@ -98,6 +98,13 @@ class UploadMaterials(tk.Frame):
             if not existing_material.empty:
                 path = existing_material.iloc[-1]["material"]
                 self.update_file_label(course, path)
+        tk.Button(
+            courses_frame,
+            text="Done",
+            # command=lambda c=course: self.select_file(c),
+            bg=PRIMARY_COLOR,
+            fg="white",
+        ).pack(anchor="center", padx=5, pady=10)
 
     def update_file_label(self, course, file_path):
         if course in self.file_labels:
