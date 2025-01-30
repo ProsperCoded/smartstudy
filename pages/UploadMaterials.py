@@ -21,7 +21,7 @@ class UploadMaterials(tk.Frame):
 
         self.all_courses = set()
         for courses in timetable.values():
-            self.all_courses.update(courses)
+            self.all_courses.update(map(lambda c: c["name"], courses))
 
         # Load existing materials
         try:

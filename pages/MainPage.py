@@ -108,6 +108,7 @@ class MainPage(tk.Frame):
             ).pack(side=tk.RIGHT, padx=5)
 
     def create_main_cta(self, parent):
+        # get current day(monday, tuesday, etc)
         current_day = datetime.now().strftime("%A")
         todays_courses = self.timetable.get(current_day, [])
 
@@ -134,7 +135,10 @@ class MainPage(tk.Frame):
 
     def open_material(self, material_path):
         if os.path.exists(material_path):
-            os.startfile(material_path)
+            if os.name == "posix":  # For Linux
+                os.system(f'xdg-open "{material_path}"')
+            elif os.name == "nt":  # For Windows
+                os.system(f"open {material_path}")
         else:
             messagebox.showerror("Error", "Material file not found!")
 

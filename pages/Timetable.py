@@ -1,7 +1,6 @@
 import tkinter as tk
 from lib.theme import PRIMARY_COLOR
-from lib.utils import write_to_json
-from lib.utils import load_from_json
+from lib.utils import write_to_json, load_from_json
 from tkinter import messagebox
 
 
@@ -34,14 +33,35 @@ class Timetable(tk.Frame):
         container = tk.Frame(self)
         container.config(padx=20, pady=20)
         container.pack()
+
+        # Add General Target Hours field
+        general_target_frame = tk.Frame(container)
+        general_target_frame.grid(row=0, column=0, columnspan=len(self.days), pady=10)
+
+        tk.Label(
+            general_target_frame, text="General Target Hours:", font=("Arial", 12)
+        ).pack(side=tk.LEFT, padx=5)
+
+        self.general_target = tk.Entry(general_target_frame, width=10)
+        self.general_target.pack(side=tk.LEFT, padx=5)
+        self.general_target.insert(0, "2")  # Default value
+
+        tk.Button(
+            general_target_frame,
+            text="Apply to All",
+            command=self.apply_general_target,
+            bg=PRIMARY_COLOR,
+            fg="white",
+        ).pack(side=tk.LEFT, padx=5)
+
         heading = tk.Label(
             container,
             text="SET TIMETABLE",
             font=("Arial", 30, "bold"),
             fg=self.backgroundColor,
         )
-        heading.grid(row=0, column=0, columnspan=len(self.days), pady=10)
-        # Frame to hold days and their respective widgets
+        heading.grid(row=1, column=0, columnspan=len(self.days), pady=10)
+        # Frame to hold days and their widgets
         self.days_frame = tk.Frame(container)  # Changed from self.parent to self
         self.days_frame.grid(padx=10, pady=10)  # Use grid instead of pack
 
@@ -78,9 +98,23 @@ class Timetable(tk.Frame):
 
                     # Add course label
                     course_label = tk.Label(
-                        course_item_frame, text=course, font=("Arial", 10)
+                        course_item_frame, text=course["name"], font=("Arial", 10)
                     )
                     course_label.pack(side="left")
+
+                    # Add target hours field
+                    hours_frame = tk.Frame(course_item_frame)
+                    hours_frame.pack(side=tk.LEFT, padx=10)
+
+                    tk.Label(hours_frame, text="hrs:", font=("Arial", 8)).pack(
+                        side=tk.LEFT
+                    )
+                    hours_entry = tk.Entry(hours_frame, width=5)
+                    hours_entry.pack(side=tk.LEFT)
+                    hours_entry.insert(0, course["target_hours"])
+                    hours_entry.bind(
+                        "<KeyRelease>", lambda e: self.clear_general_target()
+                    )
 
                     # Add delete button
                     delete_button = tk.Button(
@@ -126,6 +160,16 @@ class Timetable(tk.Frame):
         course_label = tk.Label(course_item_frame, text=course_name, font=("Arial", 10))
         course_label.pack(side="left")
 
+        # Target hours entry
+        hours_frame = tk.Frame(course_item_frame)
+        hours_frame.pack(side=tk.LEFT, padx=10)
+
+        tk.Label(hours_frame, text="hrs:", font=("Arial", 8)).pack(side=tk.LEFT)
+        hours_entry = tk.Entry(hours_frame, width=5)
+        hours_entry.pack(side=tk.LEFT)
+        hours_entry.insert(0, self.general_target.get() or "2")
+        hours_entry.bind("<KeyRelease>", lambda e: self.clear_general_target())
+
         # Add delete button
         delete_button = tk.Button(
             course_item_frame,
@@ -150,9 +194,26 @@ class Timetable(tk.Frame):
         courses_dict = {}
         for day in self.days:
             courses_dict[day] = [
-                frame.winfo_children()[0].cget(
-                    "text"
-                )  # Get text from label (first child)
+                {
+                    "name": frame.winfo_children()[0].cget("text"),
+                    "target_hours": frame.winfo_children()[1].winfo_children()[1].get()
+                    or "2",
+                }
                 for frame in self.courses[day][0].winfo_children()
             ]
         return courses_dict
+
+    def apply_general_target(self):
+        target = self.general_target.get()
+        if not target.replace(".", "").isdigit():
+            messagebox.showwarning("Invalid Input", "Please enter a valid number")
+            return
+
+        for day in self.days:
+            for course_frame in self.courses[day][0].winfo_children():
+                hours_entry = course_frame.winfo_children()[1].winfo_children()[1]
+                hours_entry.delete(0, tk.END)
+                hours_entry.insert(0, target)
+
+    def clear_general_target(self):
+        self.general_target.delete(0, tk.END)

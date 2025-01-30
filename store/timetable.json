@@ -1,10 +1,20 @@
 {
     "Monday": [],
     "Tuesday": [
-        "MAT141"
+        {
+            "name": "MAT141",
+            "target_hours": "5"
+        },
+        {
+            "name": "MAT151",
+            "target_hours": "4"
+        }
     ],
     "Wednesday": [
-        "CSC103"
+        {
+            "name": "CSC103",
+            "target_hours": "4"
+        }
     ],
     "Thursday": [],
     "Friday": [],
