@@ -1,10 +1,13 @@
 import tkinter as tk
+from lib.theme import PRIMARY_COLOR
 from lib.utils import write_to_json
 from lib.utils import load_from_json
 from tkinter import messagebox
 
 
 class Timetable(tk.Frame):
+    backgroundColor = "white"
+
     def __init__(self, parent):
         super().__init__(parent)
 
@@ -29,8 +32,18 @@ class Timetable(tk.Frame):
         self.create_ui()
 
     def create_ui(self):
+        container = tk.Frame(self)
+        container.config(padx=20, pady=20)
+        container.pack()
+        heading = tk.Label(
+            container,
+            text="SET TIMETABLE",
+            font=("Arial", 30, "bold"),
+            fg=self.backgroundColor,
+        )
+        heading.grid(row=0, column=0, columnspan=len(self.days), pady=10)
         # Frame to hold days and their respective widgets
-        self.days_frame = tk.Frame(self)  # Changed from self.parent to self
+        self.days_frame = tk.Frame(container)  # Changed from self.parent to self
         self.days_frame.grid(padx=10, pady=10)  # Use grid instead of pack
 
         for day in self.days:
@@ -85,7 +98,11 @@ class Timetable(tk.Frame):
 
         # Submit button to get all courses
         submit_button = tk.Button(
-            self.days_frame, text="Submit", command=self.store_courses
+            self.days_frame,
+            text="Submit",
+            command=self.store_courses,
+            bg=PRIMARY_COLOR,
+            fg="white",
         )
         submit_button.grid(row=4, columnspan=len(self.days), pady=10)
 

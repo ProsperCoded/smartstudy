@@ -22,6 +22,8 @@ class App(tk.Tk):
         # Container for pages
         container = tk.Frame(self)
         container.pack(fill="both", expand=True)
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
 
         # allow container to expand
         self.grid_rowconfigure(0, weight=1)

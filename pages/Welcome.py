@@ -9,7 +9,7 @@ class WelcomeWindow(tk.Frame):
     def __init__(self, parent: tk.Frame):
         super().__init__(parent)
         container = tk.Frame(self)
-        container.config(bg=self.backgroundColor, padx=20, pady=20)
+        container.config(bg=self.backgroundColor, padx=20, pady=50)
         # container.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
         container.pack(expand=True)
 
