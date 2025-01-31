@@ -74,6 +74,7 @@ class Studying(tk.Frame):
 
     def update_study_info(self):
         studying = self.parent.master.studying
+        print("updating study info,", studying)
         if studying:
             self.non_studying_message.pack_forget()
             self.course_label.config(text=studying["course"])
@@ -106,7 +107,7 @@ class Studying(tk.Frame):
         studying = self.parent.master.studying
         if not studying:
             return
-
+        print("timer is running")
         now = datetime.now()
         duration = int((now - studying["start"]).total_seconds())
         studying["duration"] = duration

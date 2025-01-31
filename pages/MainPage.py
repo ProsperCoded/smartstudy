@@ -22,6 +22,7 @@ class MainPage(tk.Frame):
         except FileNotFoundError:
             self.materials_df = pd.DataFrame(columns=["course", "material"])
 
+        self.study_buttons = []  # Add this line
         self.create_menu()
         self.create_ui()
 
@@ -113,7 +114,8 @@ class MainPage(tk.Frame):
                 ).pack(anchor="w")
 
     def show_materials(self, parent):
-        for _, row in self.materials_df.iterrows():
+        self.study_buttons.clear()  # Clear previous buttons
+        for idx, row in self.materials_df.iterrows():
             frame = tk.Frame(parent, bg=self.backgroundColor)
             frame.pack(fill=tk.X, pady=5)
 
@@ -121,13 +123,17 @@ class MainPage(tk.Frame):
                 side=tk.LEFT, padx=5
             )
 
-            tk.Button(
+            study_button = tk.Button(
                 frame,
                 text="START STUDY",
-                command=lambda m=row["material"]: self.open_material(row["course"], m),
+                command=lambda m=row["material"], i=idx: self.open_material(
+                    row["course"], m, i
+                ),
                 bg=PRIMARY_COLOR,
                 fg="white",
-            ).pack(side=tk.RIGHT, padx=5)
+            )
+            study_button.pack(side=tk.RIGHT, padx=5)
+            self.study_buttons.append(study_button)
 
     def create_main_cta(self, parent):
         # get current day(monday, tuesday, etc)
@@ -159,7 +165,28 @@ class MainPage(tk.Frame):
         # Placeholder - implement tracking logic
         return []
 
-    def open_material(self, course, material_path):
+    def open_material(self, course, material_path, button_idx=None):
+        if self.master.master.studying:
+            if (
+                button_idx is not None
+                and self.study_buttons[button_idx]["text"] == "STUDYING..."
+            ):
+                # Stop the current study session
+                self.master.master.stop_study()
+                self.study_buttons[button_idx].config(
+                    text="START STUDY",
+                    command=lambda: self.open_material(
+                        course, material_path, button_idx
+                    ),
+                )
+                return
+            else:
+                messagebox.showerror(
+                    "Can't Open Two Materials",
+                    "You are already studying! Close the current study to start a new one.",
+                )
+                return
+
         if os.path.exists(material_path):
             if os.name == "posix":  # For Linux
                 os.system(f'xdg-open "{material_path}"')
@@ -168,8 +195,18 @@ class MainPage(tk.Frame):
             else:
                 messagebox.showerror("Error", "Can't open file on this OS!")
                 return
+
+            # Update button state if button_idx provided
+            if button_idx is not None:
+                self.study_buttons[button_idx].config(
+                    text="STUDYING...",
+                    command=lambda: self.open_material(
+                        course, material_path, button_idx
+                    ),
+                )
+
             startTime = datetime.now()
-            self.master.studying = {
+            self.master.master.studying = {
                 "course": course,
                 "start": startTime,
                 "current": startTime,

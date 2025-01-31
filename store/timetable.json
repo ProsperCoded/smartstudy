@@ -14,6 +14,10 @@
         {
             "name": "CSC103",
             "target_hours": "4"
+        },
+        {
+            "name": "MAT111",
+            "target_hours": "5"
         }
     ],
     "Thursday": [],
