@@ -206,11 +206,30 @@ class MainPage(tk.Frame):
                 )
 
             startTime = datetime.now()
+
+            try:
+                analytics_df = pd.read_excel("store/analytics.xlsx")
+            except FileNotFoundError:
+                analytics_df = pd.DataFrame(
+                    columns=["course", "duration(s)", "start", "end"]
+                )
+
+            today = datetime.now().date()
+            same_day_course = analytics_df[
+                (analytics_df["course"] == course)
+                & (analytics_df["start"].dt.date == today)
+            ]
+            existing_duration = (
+                int(same_day_course.iloc[-1]["duration(s)"])
+                if not same_day_course.empty
+                else 0
+            )
+
             self.master.master.studying = {
                 "course": course,
                 "start": startTime,
                 "current": startTime,
-                "duration": 0,
+                "duration": existing_duration,
                 "material": material_path,
             }
             self.master.master.startTimer()

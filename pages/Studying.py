@@ -131,10 +131,16 @@ class Studying(tk.Frame):
         if not studying:
             return
         print("timer is running")
-        now = datetime.now()
-        duration = int((now - studying["start"]).total_seconds())
-        studying["duration"] = duration
-        studying["current"] = now
+        duration = studying["duration"] = studying["duration"] + 1
+        startTime = studying["start"]
+        studying["current"] = datetime(
+            year=startTime.year,
+            month=startTime.month,
+            day=startTime.day,
+            hour=startTime.hour,
+            minute=startTime.minute,
+            second=startTime.second + duration,
+        )
 
         hours = duration // 3600
         minutes = (duration % 3600) // 60
@@ -172,13 +178,22 @@ class Studying(tk.Frame):
                 "end": studying["current"],
             }
 
-            # Remove any previous entries for this session
-            df = df[
-                (
-                    ~(df["course"] == studying["course"])
-                    & (df["start"] == studying["start"])
-                )
-            ]
+            lastRecord = df.tail(1)
+            # check if today
+            if len(lastRecord) > 0:
+                lastRecord = lastRecord.iloc[0]
+                # extract day from lastRecord and start
+                lastRecordDay = lastRecord["start"].date().day
+                todayRecordDay = studying["start"].date().day
+                if (
+                    lastRecordDay == todayRecordDay
+                    and lastRecord["course"] == studying["course"]
+                ):
+                    # Only update the 'end' time, keep existing duration
+                    lastRecord["end"] = studying["current"]
+                    df.iloc[-1] = lastRecord
+                    df.to_excel("store/analytics.xlsx", index=False)
+                    return
 
             # Append current session
             df = pd.concat([df, pd.DataFrame([current_session])], ignore_index=True)
