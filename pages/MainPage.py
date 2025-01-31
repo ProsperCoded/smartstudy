@@ -235,3 +235,14 @@ class MainPage(tk.Frame):
             messagebox.showwarning(
                 "No Materials", "No study materials found for today's courses!"
             )
+
+    def reset_study_buttons(self):
+        for idx, button in enumerate(self.study_buttons):
+            button.config(
+                text="START STUDY",
+                command=lambda i=idx: self.open_material(
+                    self.materials_df.loc[i, "course"],
+                    self.materials_df.loc[i, "material"],
+                    i,
+                ),
+            )

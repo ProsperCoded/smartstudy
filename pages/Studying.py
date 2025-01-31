@@ -5,6 +5,7 @@ import os
 import time
 from threading import Thread
 from lib.theme import PRIMARY_COLOR
+import subprocess
 
 
 class Studying(tk.Frame):
@@ -100,8 +101,25 @@ class Studying(tk.Frame):
         self.timer_thread = Thread(target=self.run_timer, daemon=True)
         self.timer_thread.start()
 
+    def check_file_open(self, file_path):
+        try:
+            # Run lsof and check output
+            output = subprocess.check_output(
+                ["lsof", file_path], stderr=subprocess.DEVNULL
+            )
+            return True
+        except subprocess.CalledProcessError:
+            # lsof exits with 1 if the file is not open
+            return False
+
     def run_timer(self):
         while self.timer_running:
+            studying = self.parent.master.studying
+            if studying and not self.check_file_open(studying["material"]):
+                print("Material file was closed, stopping timer...")
+                self.stop_timer()
+                return
+
             self.update_timer()
             time.sleep(1)
 
@@ -133,6 +151,8 @@ class Studying(tk.Frame):
         if studying:
             self.save_final_analytics(studying)
             self.parent.master.studying = None
+        main_page = self.parent.master.pages["MainPage"]
+        main_page.reset_study_buttons()
         self.update_study_info()
         self.parent.master.show_page("MainPage")
 
