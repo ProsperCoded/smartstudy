@@ -79,6 +79,11 @@ class Studying(tk.Frame):
             self.non_studying_message.pack_forget()
             self.course_label.config(text=studying["course"])
             self.material_label.config(text=os.path.basename(studying["material"]))
+            # Reset elements incase they have been closed
+            self.course_label.pack()
+            self.material_label.pack()
+            self.stop_button.pack()
+            self.timer_label.pack(pady=40)
             self.start_timer()
         else:
             # Hide timer elements
@@ -149,8 +154,8 @@ class Studying(tk.Frame):
 
             # Remove any previous entries for this session
             df = df[
-                ~(
-                    (df["course"] == studying["course"])
+                (
+                    ~(df["course"] == studying["course"])
                     & (df["start"] == studying["start"])
                 )
             ]
