@@ -215,15 +215,21 @@ class MainPage(tk.Frame):
                 )
 
             today = datetime.now().date()
-            same_day_course = analytics_df[
-                (analytics_df["course"] == course)
-                & (analytics_df["start"].dt.date == today)
-            ]
-            existing_duration = (
-                int(same_day_course.iloc[-1]["duration(s)"])
-                if not same_day_course.empty
-                else 0
-            )
+
+            if analytics_df.empty:
+                existing_duration = 0
+                same_day_course = pd.DataFrame()
+            else:
+                last_start = pd.to_datetime(analytics_df["start"].iloc[-1])
+                last_date = last_start.date()
+                same_day_course = analytics_df[
+                    (analytics_df["course"] == course) & (last_date == today)
+                ]
+                existing_duration = (
+                    int(same_day_course.iloc[-1]["duration(s)"])
+                    if not same_day_course.empty
+                    else 0
+                )
 
             self.master.master.studying = {
                 "course": course,

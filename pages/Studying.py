@@ -178,25 +178,19 @@ class Studying(tk.Frame):
                 "end": studying["current"],
             }
 
-            lastRecord = df.tail(1)
-            # check if today
-            if len(lastRecord) > 0:
-                lastRecord = lastRecord.iloc[0]
-                # extract day from lastRecord and start
-                lastRecordDay = lastRecord["start"].date().day
-                todayRecordDay = studying["start"].date().day
-                if (
-                    lastRecordDay == todayRecordDay
-                    and lastRecord["course"] == studying["course"]
-                ):
-                    # Only update the 'end' time, keep existing duration
-                    lastRecord["end"] = studying["current"]
-                    df.iloc[-1] = lastRecord
-                    df.to_excel("store/analytics.xlsx", index=False)
-                    return
-
-            # Append current session
-            df = pd.concat([df, pd.DataFrame([current_session])], ignore_index=True)
+            # Instead of always checking only the last entry, find any record that matches same day & course:
+            same_day_course_df = df[
+                (df["course"] == studying["course"])
+                & (pd.to_datetime(df["start"]).dt.date == studying["start"].date())
+            ]
+            if not same_day_course_df.empty:
+                # Update existing entry
+                index_to_update = same_day_course_df.index[-1]
+                df.at[index_to_update, "duration(s)"] = studying["duration"]
+                df.at[index_to_update, "end"] = studying["current"]
+            else:
+                # Append current session
+                df = pd.concat([df, pd.DataFrame([current_session])], ignore_index=True)
 
             # Save updated analytics
             df.to_excel("store/analytics.xlsx", index=False)
@@ -209,13 +203,24 @@ class Studying(tk.Frame):
         except FileNotFoundError:
             df = pd.DataFrame(columns=["course", "duration(s)", "start", "end"])
 
-        # Record final session data
-        final_session = {
-            "course": studying["course"],
-            "duration(s)": studying["duration"],
-            "start": studying["start"],
-            "end": studying["current"],
-        }
+        # Use the same day/course check as above; update if exists, otherwise create
+        same_day_course_df = df[
+            (df["course"] == studying["course"])
+            & (pd.to_datetime(df["start"]).dt.date == studying["start"].date())
+        ]
 
-        df = pd.concat([df, pd.DataFrame([final_session])], ignore_index=True)
+        if not same_day_course_df.empty:
+            index_to_update = same_day_course_df.index[-1]
+            df.at[index_to_update, "duration(s)"] = studying["duration"]
+            df.at[index_to_update, "end"] = studying["current"]
+        else:
+            # Record final session data
+            final_session = {
+                "course": studying["course"],
+                "duration(s)": studying["duration"],
+                "start": studying["start"],
+                "end": studying["current"],
+            }
+            df = pd.concat([df, pd.DataFrame([final_session])], ignore_index=True)
+
         df.to_excel("store/analytics.xlsx", index=False)
