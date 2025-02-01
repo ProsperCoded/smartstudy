@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from Analysis import Analysis
-from Studying import Studying
 from datetime import datetime
 import pandas as pd
 import os
@@ -49,11 +47,11 @@ class Dashboard(tk.Frame):
         )
         home_menu.add_command(
             label="Studying",
-            command=lambda: self.navigate_to(Studying.__name__),
+            command=lambda: self.navigate_to("Studying"),
         )
         home_menu.add_command(
             label="Analysis",
-            command=lambda: self.navigate_to(Analysis.__name__),
+            command=lambda: self.navigate_to("Analysis"),
         )
 
         # Settings menu

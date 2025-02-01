@@ -3,7 +3,6 @@ from pages.ProfileWindow import ProfileWindow
 from pages.Welcome import WelcomeWindow
 from pages.Timetable import Timetable
 from pages.UploadMaterials import UploadMaterials
-from pages.MainPage import MainPage
 from pages.Studying import Studying
 from pages.Analysis import Analysis
 from pages.Dashboard import Dashboard
@@ -21,7 +20,6 @@ pages = [
     Timetable,
     UploadMaterials,
     Dashboard,
-    MainPage,
     Studying,
     Analysis,
 ]
@@ -65,7 +63,7 @@ class App(tk.Tk):
     def stop_study(self):
         if self.studying:
             self.pages[Studying.__name__].stop_timer()
-            self.show_page(MainPage.__name__)
+            self.show_page(Dashboard.__name__)
 
 
 # START APPLICATION

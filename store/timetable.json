@@ -23,6 +23,10 @@
         {
             "name": "MILLONIARA",
             "target_hours": "2"
+        },
+        {
+            "name": "aaaaaa",
+            "target_hours": "2"
         }
     ],
     "Sunday": []

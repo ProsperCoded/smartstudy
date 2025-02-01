@@ -1,5 +1,5 @@
 import tkinter as tk
-from pages.MainPage import MainPage
+from pages.Dashboard import Dashboard
 from tkinter import filedialog
 from lib.theme import PRIMARY_COLOR
 from lib.utils import load_from_json
@@ -105,7 +105,7 @@ class UploadMaterials(tk.Frame):
             # command=lambda c=course: self.select_file(c),
             bg=PRIMARY_COLOR,
             fg="white",
-            command=lambda: self.master.master.show_page(MainPage.__name__),
+            command=lambda: self.master.master.show_page(Dashboard.__name__),
         ).pack(anchor="center", padx=5, pady=10)
 
     def update_file_label(self, course, file_path):
@@ -168,7 +168,7 @@ class UploadMaterials(tk.Frame):
         self.materials_df.to_excel("store/materials.xlsx", index=False)
 
         # Refresh main page
-        self.master.master.pages[MainPage.__name__].reload()
+        self.master.master.pages[Dashboard.__name__].reload()
 
     def reload(self):
         # Load courses from timetable
