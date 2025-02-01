@@ -40,6 +40,10 @@ class MainPage(tk.Frame):
             label="Studying",
             command=lambda: self.navigate_to("Studying"),
         )
+        home_menu.add_command(  # Add this section
+            label="Analysis",
+            command=lambda: self.navigate_to("Analysis"),
+        )
 
         # Settings menu
         file_menu = tk.Menu(menubar, tearoff=0)

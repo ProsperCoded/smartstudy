@@ -5,6 +5,7 @@ from pages.Timetable import Timetable
 from pages.UploadMaterials import UploadMaterials
 from pages.MainPage import MainPage
 from pages.Studying import Studying
+from pages.Analysis import Analysis
 
 """
 Main module for the SmartStudy application.
@@ -12,7 +13,15 @@ Main module for the SmartStudy application.
 This module initializes the main window using the customtkinter library.
 """
 
-pages = [WelcomeWindow, ProfileWindow, Timetable, UploadMaterials, MainPage, Studying]
+pages = [
+    WelcomeWindow,
+    ProfileWindow,
+    Timetable,
+    UploadMaterials,
+    MainPage,
+    Studying,
+    Analysis,
+]
 
 
 class App(tk.Tk):

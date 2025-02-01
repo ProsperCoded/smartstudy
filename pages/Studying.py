@@ -1,5 +1,5 @@
 import tkinter as tk
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import os
 import time
@@ -133,14 +133,9 @@ class Studying(tk.Frame):
         print("timer is running")
         duration = studying["duration"] = studying["duration"] + 1
         startTime = studying["start"]
-        studying["current"] = datetime(
-            year=startTime.year,
-            month=startTime.month,
-            day=startTime.day,
-            hour=startTime.hour,
-            minute=startTime.minute,
-            second=startTime.second + duration,
-        )
+
+        # Use timedelta to properly add seconds
+        studying["current"] = startTime + timedelta(seconds=duration)
 
         hours = duration // 3600
         minutes = (duration % 3600) // 60
