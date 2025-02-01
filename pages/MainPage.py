@@ -134,12 +134,14 @@ class MainPage(tk.Frame):
                 side=tk.LEFT, padx=5
             )
 
+            # Fix closure issue by creating function factory
+            def create_command(course, material, index):
+                return lambda: self.open_material(course, material, index)
+
             study_button = tk.Button(
                 frame,
                 text="START STUDY",
-                command=lambda m=row["material"], i=idx: self.open_material(
-                    row["course"], m, i
-                ),
+                command=create_command(row["course"], row["material"], idx),
                 bg=PRIMARY_COLOR,
                 fg="white",
             )
@@ -273,12 +275,12 @@ class MainPage(tk.Frame):
             )
 
     def reset_study_buttons(self):
-        for idx, button in enumerate(self.study_buttons):
-            button.config(
+        for idx, row in self.materials_df.iterrows():
+            # Fix closure issue by creating function factory
+            def create_command(course, material, index):
+                return lambda: self.open_material(course, material, index)
+
+            self.study_buttons[idx].config(
                 text="START STUDY",
-                command=lambda i=idx: self.open_material(
-                    self.materials_df.loc[i, "course"],
-                    self.materials_df.loc[i, "material"],
-                    i,
-                ),
+                command=create_command(row["course"], row["material"], idx),
             )
