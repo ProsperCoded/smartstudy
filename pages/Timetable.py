@@ -142,6 +142,8 @@ class Timetable(tk.Frame):
     def store_courses(self):
         courses = self.get_courses()
         write_to_json(courses, "store/timetable.json")
+        # Refresh main page
+        self.parent.master.pages["MainPage"].reload()
 
     def add_course(self, day, entry):
         course_name = entry.get().strip()

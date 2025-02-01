@@ -152,8 +152,13 @@ class Studying(tk.Frame):
         if studying:
             self.save_final_analytics(studying)
             self.parent.master.studying = None
+
+        # Refresh relevant pages
         main_page = self.parent.master.pages["MainPage"]
-        main_page.reset_study_buttons()
+        analysis_page = self.parent.master.pages["Analysis"]
+        main_page.reload()
+        analysis_page.reload()
+
         self.update_study_info()
         self.parent.master.show_page("MainPage")
 

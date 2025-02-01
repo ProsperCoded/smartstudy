@@ -13,7 +13,11 @@ class MainPage(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
+        self.reload()
+        self.create_menu()
+        self.create_ui()
 
+    def reload(self):
         # Load timetable
         self.timetable = load_from_json("store/timetable.json")
         self.profile = load_from_json("store/profile.json")
@@ -21,10 +25,13 @@ class MainPage(tk.Frame):
             self.materials_df = pd.read_excel("store/materials.xlsx")
         except FileNotFoundError:
             self.materials_df = pd.DataFrame(columns=["course", "material"])
+        self.study_buttons = []
 
-        self.study_buttons = []  # Add this line
-        self.create_menu()
-        self.create_ui()
+        # Refresh UI if it exists
+        if hasattr(self, "winfo_children") and self.winfo_children():
+            for widget in self.winfo_children():
+                widget.destroy()
+            self.create_ui()
 
     def create_menu(self):
         menubar = tk.Menu(self.parent)

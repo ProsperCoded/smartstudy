@@ -14,6 +14,12 @@ class Analysis(tk.Frame):
         self.parent = parent
         self.create_ui()
 
+    def reload(self):
+        # Clear existing widgets
+        for widget in self.winfo_children():
+            widget.destroy()
+        self.create_ui()
+
     def create_ui(self):
         container = tk.Frame(self, bg=self.backgroundColor)
         container.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)

@@ -165,3 +165,6 @@ class UploadMaterials(tk.Frame):
             [self.materials_df, new_record], ignore_index=True
         )
         self.materials_df.to_excel("store/materials.xlsx", index=False)
+
+        # Refresh main page
+        self.parent.master.pages["MainPage"].reload()
