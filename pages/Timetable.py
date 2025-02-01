@@ -142,14 +142,15 @@ class Timetable(tk.Frame):
         )
         submit_button.grid(row=4, columnspan=len(self.days), pady=10)
 
-    def store_courses(self):
+    def store_courses(self, to_dashboard=True):
         courses = self.get_courses()
         write_to_json(courses, "store/timetable.json")
         # Refresh both pages
         self.master.master.pages[Dashboard.__name__].reload()
         self.master.master.pages["UploadMaterials"].reload()
         # go to main page
-        self.master.master.show_page(Dashboard.__name__)
+        if to_dashboard:
+            self.master.master.show_page(Dashboard.__name__)
 
     def add_course(self, day, entry):
         course_name = entry.get().strip()
@@ -216,7 +217,7 @@ class Timetable(tk.Frame):
         # Remove the course frame
         course_frame.destroy()
         # Update stored courses
-        self.store_courses()
+        self.store_courses(to_dashboard=False)
 
     def get_courses(self):
         courses_dict = {}

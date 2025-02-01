@@ -43,3 +43,9 @@ Data will be persisted in files in **store directory**, using json serialization
 For GUI will be using an upgraded version of tkinter called **_[custom-tikinter](https://customtkinter.tomschimansky.com/) _ (you might need to set up a viertual environment🌚)**
 
 You can add extra tools and requirement you find necessary
+
+### PACKAGES
+
+- matplotlib
+- pandas
+-
