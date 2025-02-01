@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
+from Analysis import Analysis
+from Studying import Studying
 from datetime import datetime
 import pandas as pd
 import os
@@ -7,7 +9,7 @@ from lib.theme import PRIMARY_COLOR
 from lib.utils import load_from_json
 
 
-class MainPage(tk.Frame):
+class Dashboard(tk.Frame):
     backgroundColor = "white"
 
     def __init__(self, parent):
@@ -20,7 +22,6 @@ class MainPage(tk.Frame):
     def reload(self):
         # Load timetable
         self.timetable = load_from_json("store/timetable.json")
-        today = datetime.now().strftime("%A")
 
         # self.timetable = self.timetable.get(today, [])
         self.profile = load_from_json("store/profile.json")
@@ -44,15 +45,15 @@ class MainPage(tk.Frame):
         home_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Home", menu=home_menu)
         home_menu.add_command(
-            label="Home", command=lambda: self.navigate_to("MainPage")
+            label="Dashboard", command=lambda: self.navigate_to(Dashboard.__name__)
         )
         home_menu.add_command(
             label="Studying",
-            command=lambda: self.navigate_to("Studying"),
+            command=lambda: self.navigate_to(Studying.__name__),
         )
         home_menu.add_command(
             label="Analysis",
-            command=lambda: self.navigate_to("Analysis"),
+            command=lambda: self.navigate_to(Analysis.__name__),
         )
 
         # Settings menu

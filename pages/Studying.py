@@ -154,13 +154,13 @@ class Studying(tk.Frame):
             self.parent.master.studying = None
 
         # Refresh relevant pages
-        main_page = self.parent.master.pages["MainPage"]
+        main_page = self.parent.master.pages["Dashboard"]
         analysis_page = self.parent.master.pages["Analysis"]
         main_page.reload()
         analysis_page.reload()
 
         self.update_study_info()
-        self.parent.master.show_page("MainPage")
+        self.parent.master.show_page("Dashboard")
 
     def update_analytics(self, studying):
         try:

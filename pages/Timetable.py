@@ -4,7 +4,7 @@ from lib.utils import write_to_json, load_from_json
 from tkinter import messagebox
 import pandas as pd
 import os
-from pages.MainPage import MainPage
+from pages.Dashboard import Dashboard
 
 
 class Timetable(tk.Frame):
@@ -146,10 +146,10 @@ class Timetable(tk.Frame):
         courses = self.get_courses()
         write_to_json(courses, "store/timetable.json")
         # Refresh both pages
-        self.master.master.pages[MainPage.__name__].reload()
+        self.master.master.pages[Dashboard.__name__].reload()
         self.master.master.pages["UploadMaterials"].reload()
         # go to main page
-        self.master.master.show_page(MainPage.__name__)
+        self.master.master.show_page(Dashboard.__name__)
 
     def add_course(self, day, entry):
         course_name = entry.get().strip()

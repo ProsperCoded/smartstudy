@@ -6,6 +6,7 @@ from pages.UploadMaterials import UploadMaterials
 from pages.MainPage import MainPage
 from pages.Studying import Studying
 from pages.Analysis import Analysis
+from pages.Dashboard import Dashboard
 import os
 
 """
@@ -19,6 +20,7 @@ pages = [
     ProfileWindow,
     Timetable,
     UploadMaterials,
+    Dashboard,
     MainPage,
     Studying,
     Analysis,
@@ -79,5 +81,5 @@ elif not os.path.exists(timetable_path):
 elif not os.path.exists(materials_path):
     app.show_page(UploadMaterials.__name__)
 else:
-    app.show_page(MainPage.__name__)
+    app.show_page(Dashboard.__name__)
 app.mainloop()
