@@ -2,6 +2,9 @@ import tkinter as tk
 from lib.theme import PRIMARY_COLOR
 from lib.utils import write_to_json, load_from_json
 from tkinter import messagebox
+import pandas as pd
+import os
+from pages.MainPage import MainPage
 
 
 class Timetable(tk.Frame):
@@ -142,8 +145,11 @@ class Timetable(tk.Frame):
     def store_courses(self):
         courses = self.get_courses()
         write_to_json(courses, "store/timetable.json")
-        # Refresh main page
-        self.parent.master.pages["MainPage"].reload()
+        # Refresh both pages
+        self.master.master.pages[MainPage.__name__].reload()
+        self.master.master.pages["UploadMaterials"].reload()
+        # go to main page
+        self.master.master.show_page(MainPage.__name__)
 
     def add_course(self, day, entry):
         course_name = entry.get().strip()
@@ -187,6 +193,26 @@ class Timetable(tk.Frame):
         entry.delete(0, tk.END)
 
     def delete_course(self, course_frame, day):
+        # Get course name before destroying the frame
+        course_name = course_frame.winfo_children()[0].cget("text")
+
+        # Check and delete associated material if exists
+        try:
+            materials_df = pd.read_excel("store/materials.xlsx")
+            course_material = materials_df[materials_df["course"] == course_name]
+
+            if not course_material.empty:
+                # Delete the physical file
+                material_path = course_material.iloc[0]["material"]
+                if os.path.exists(material_path):
+                    os.remove(material_path)
+
+                # Update materials.xlsx
+                materials_df = materials_df[materials_df["course"] != course_name]
+                materials_df.to_excel("store/materials.xlsx", index=False)
+        except FileNotFoundError:
+            pass  # No materials file exists yet
+
         # Remove the course frame
         course_frame.destroy()
         # Update stored courses

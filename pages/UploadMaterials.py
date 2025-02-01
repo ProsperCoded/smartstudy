@@ -1,4 +1,5 @@
 import tkinter as tk
+from pages.MainPage import MainPage
 from tkinter import filedialog
 from lib.theme import PRIMARY_COLOR
 from lib.utils import load_from_json
@@ -104,6 +105,7 @@ class UploadMaterials(tk.Frame):
             # command=lambda c=course: self.select_file(c),
             bg=PRIMARY_COLOR,
             fg="white",
+            command=lambda: self.master.master.show_page(MainPage.__name__),
         ).pack(anchor="center", padx=5, pady=10)
 
     def update_file_label(self, course, file_path):
@@ -133,9 +135,8 @@ class UploadMaterials(tk.Frame):
         file_path = filedialog.askopenfilename(
             title=f"Select material for {course}",
             filetypes=[
-                ("PDF files", "*.pdf"),
-                ("Word files", "*.doc;*.docx"),
                 ("All files", "*.*"),
+                ("Word files", "*.doc;*.docx"),
             ],
         )
 
@@ -167,4 +168,25 @@ class UploadMaterials(tk.Frame):
         self.materials_df.to_excel("store/materials.xlsx", index=False)
 
         # Refresh main page
-        self.parent.master.pages["MainPage"].reload()
+        self.master.master.pages[MainPage.__name__].reload()
+
+    def reload(self):
+        # Load courses from timetable
+        timetable = load_from_json("store/timetable.json")
+
+        self.all_courses = set()
+        for courses in timetable.values():
+            self.all_courses.update(map(lambda c: c["name"], courses))
+
+        # Load existing materials
+        try:
+            self.materials_df = pd.read_excel("store/materials.xlsx")
+        except FileNotFoundError:
+            self.materials_df = pd.DataFrame(columns=["course", "material"])
+
+        # Clear existing widgets if any
+        if hasattr(self, "winfo_children") and self.winfo_children():
+            for widget in self.winfo_children():
+                widget.destroy()
+
+        self.create_ui()

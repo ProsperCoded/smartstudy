@@ -4,24 +4,26 @@
         {
             "name": "MAT141",
             "target_hours": "5"
-        },
-        {
-            "name": "MAT151",
-            "target_hours": "4"
         }
     ],
     "Wednesday": [
         {
             "name": "CSC103",
             "target_hours": "4"
-        },
-        {
-            "name": "MAT111",
-            "target_hours": "5"
         }
     ],
-    "Thursday": [],
+    "Thursday": [
+        {
+            "name": "HELLO",
+            "target_hours": "2"
+        }
+    ],
     "Friday": [],
-    "Saturday": [],
+    "Saturday": [
+        {
+            "name": "MILLONIARA",
+            "target_hours": "2"
+        }
+    ],
     "Sunday": []
 }

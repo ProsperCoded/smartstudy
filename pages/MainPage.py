@@ -20,6 +20,9 @@ class MainPage(tk.Frame):
     def reload(self):
         # Load timetable
         self.timetable = load_from_json("store/timetable.json")
+        today = datetime.now().strftime("%A")
+
+        # self.timetable = self.timetable.get(today, [])
         self.profile = load_from_json("store/profile.json")
         try:
             self.materials_df = pd.read_excel("store/materials.xlsx")
@@ -47,7 +50,7 @@ class MainPage(tk.Frame):
             label="Studying",
             command=lambda: self.navigate_to("Studying"),
         )
-        home_menu.add_command(  # Add this section
+        home_menu.add_command(
             label="Analysis",
             command=lambda: self.navigate_to("Analysis"),
         )
@@ -62,9 +65,6 @@ class MainPage(tk.Frame):
             label="Upload Materials",
             command=lambda: self.navigate_to("UploadMaterials"),
         )
-
-        file_menu.add_separator()
-        file_menu.add_command(label="Start Study", command=self.start_todays_study)
 
         # Profile menu
         profile_menu = tk.Menu(menubar, tearoff=0)
@@ -99,15 +99,19 @@ class MainPage(tk.Frame):
         notification_frame.pack(fill=tk.X, pady=10)
         self.show_unengaged_courses(notification_frame)
 
+        # Today's Courses Section
+        todays_frame = tk.LabelFrame(
+            container, text="Today's Courses", bg=self.backgroundColor
+        )
+        todays_frame.pack(fill=tk.X, pady=10)
+        self.show_todays_courses(todays_frame)
+
         # Materials Section
         materials_frame = tk.LabelFrame(
             container, text="Course Materials", bg=self.backgroundColor
         )
         materials_frame.pack(fill=tk.BOTH, expand=True, pady=10)
         self.show_materials(materials_frame)
-
-        # Main CTA Button
-        self.create_main_cta(container)
 
     def show_unengaged_courses(self, parent):
         # Placeholder for tracking logic - will need to be implemented
@@ -123,6 +127,40 @@ class MainPage(tk.Frame):
                 tk.Label(
                     parent, text=f"⚠️ {course} needs attention", bg=self.backgroundColor
                 ).pack(anchor="w")
+
+    def show_todays_courses(self, parent):
+        current_day = datetime.now().strftime("%A")
+        todays_courses = self.timetable.get(current_day, [])
+
+        if not todays_courses:
+            tk.Label(
+                parent,
+                text="No courses scheduled for today",
+                bg=self.backgroundColor,
+            ).pack(pady=10)
+            return
+
+        for course in todays_courses:
+            frame = tk.Frame(parent, bg=self.backgroundColor)
+            frame.pack(fill=tk.X, pady=5)
+
+            tk.Label(frame, text=course["name"], bg=self.backgroundColor).pack(
+                side=tk.LEFT, padx=5
+            )
+
+            course_materials = self.materials_df[
+                self.materials_df["course"] == course["name"]
+            ]
+            if not course_materials.empty:
+                material_path = course_materials.iloc[0]["material"]
+                tk.Button(
+                    frame,
+                    text="START STUDY",
+                    command=lambda c=course["name"],
+                    p=material_path: self.open_material(c, p),
+                    bg=PRIMARY_COLOR,
+                    fg="white",
+                ).pack(side=tk.RIGHT, padx=5)
 
     def show_materials(self, parent):
         self.study_buttons.clear()  # Clear previous buttons
@@ -147,25 +185,6 @@ class MainPage(tk.Frame):
             )
             study_button.pack(side=tk.RIGHT, padx=5)
             self.study_buttons.append(study_button)
-
-    def create_main_cta(self, parent):
-        # get current day(monday, tuesday, etc)
-        current_day = datetime.now().strftime("%A")
-        todays_courses = self.timetable.get(current_day, [])
-
-        if todays_courses:
-            tk.Button(
-                parent,
-                text=f"START TODAY'S STUDY - {', '.join(todays_courses)}",
-                command=self.start_todays_study,
-                bg=PRIMARY_COLOR,
-                fg="white",
-                font=("Arial", 12, "bold"),
-            ).pack(pady=20)
-        else:
-            tk.Label(
-                parent, text="No courses scheduled for today", bg=self.backgroundColor
-            ).pack(pady=20)
 
     def navigate_to(self, page_name):
         self.parent.master.show_page(page_name)
@@ -254,25 +273,6 @@ class MainPage(tk.Frame):
             self.master.master.startTimer()
         else:
             messagebox.showerror("Error", "Material file not found!")
-
-    def start_todays_study(self):
-        current_day = datetime.now().strftime("%A")
-        todays_courses = self.timetable.get(current_day, [])
-
-        if not todays_courses:
-            messagebox.showinfo("No Courses", "No courses scheduled for today!")
-            return
-
-        # Find first available material for today's courses
-        for course in todays_courses:
-            course_materials = self.materials_df[self.materials_df["course"] == course]
-            if not course_materials.empty:
-                self.open_material(course, course_materials.iloc[0]["material"])
-                break
-        else:
-            messagebox.showwarning(
-                "No Materials", "No study materials found for today's courses!"
-            )
 
     def reset_study_buttons(self):
         for idx, row in self.materials_df.iterrows():

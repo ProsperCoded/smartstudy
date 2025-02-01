@@ -6,6 +6,7 @@ from pages.UploadMaterials import UploadMaterials
 from pages.MainPage import MainPage
 from pages.Studying import Studying
 from pages.Analysis import Analysis
+import os
 
 """
 Main module for the SmartStudy application.
@@ -53,19 +54,30 @@ class App(tk.Tk):
         self.pages[page_name].tkraise()
 
     def startTimer(self):
-        self.pages["Studying"].update_study_info()
-        self.show_page("Studying")
+        self.pages[Studying.__name__].update_study_info()
+        self.show_page(Studying.__name__)
 
     def stopTimer(self):
-        self.pages["Studying"].stop_timer()
+        self.pages[Studying.__name__].stop_timer()
 
     def stop_study(self):
         if self.studying:
-            self.pages["Studying"].stop_timer()
-            self.show_page("MainPage")
+            self.pages[Studying.__name__].stop_timer()
+            self.show_page(MainPage.__name__)
 
 
 # START APPLICATION
 app = App()
-app.show_page(MainPage.__name__)
+# checking resources
+timetable_path = "store/timetable.json"
+materials_path = "store/materials.xlsx"
+profile_path = "store/profile.json"
+if not os.path.exists(profile_path):
+    app.show_page(WelcomeWindow.__name__)
+elif not os.path.exists(timetable_path):
+    app.show_page(Timetable.__name__)
+elif not os.path.exists(materials_path):
+    app.show_page(UploadMaterials.__name__)
+else:
+    app.show_page(MainPage.__name__)
 app.mainloop()

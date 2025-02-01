@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import lib.utils as utils
 from lib.theme import PRIMARY_COLOR
 
@@ -54,10 +55,19 @@ class ProfileWindow(tk.Frame):
         # self.pack(fill=tk.BOTH, expand=True)
 
     def submit(self):
-        username = self.userNameEntry.get()
-        email = self.emailEntry.get()
+        username = self.userNameEntry.get().strip()
+        email = self.emailEntry.get().strip()
+
+        if not username:
+            messagebox.showerror("Error", "Please enter a username")
+            return
+
+        if not email:
+            messagebox.showerror("Error", "Please enter an email address")
+            return
+
         userProfile = {"username": username, "email": email}
         storeLocation = "store/profile.json"
-        print(userProfile)
         utils.write_to_json(userProfile, storeLocation)
-        pass
+        # Navigate to timetable after successful profile creation
+        self.master.master.show_page("Timetable")
