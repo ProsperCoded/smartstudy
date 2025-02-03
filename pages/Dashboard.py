@@ -224,7 +224,7 @@ class Dashboard(tk.Frame):
             if os.name == "posix":  # For Linux
                 os.system(f'xdg-open "{material_path}"')
             elif os.name == "nt":  # For Windows
-                os.system(f'start  "{material_path}"')
+                os.system(f'start  .\\"{material_path}"')
             else:
                 messagebox.showerror("Error", "Can't open file on this OS!")
                 return

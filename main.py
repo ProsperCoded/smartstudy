@@ -8,11 +8,6 @@ from pages.Analysis import Analysis
 from pages.Dashboard import Dashboard
 import os
 
-"""
-Main module for the SmartStudy application.
-
-This module initializes the main window using the customtkinter library.
-"""
 
 pages = [
     WelcomeWindow,
@@ -74,6 +69,7 @@ materials_path = "store/materials.xlsx"
 profile_path = "store/profile.json"
 if not os.path.exists(profile_path):
     app.show_page(WelcomeWindow.__name__)
+    os.makedirs("store/materials", exist_ok=True)
 elif not os.path.exists(timetable_path):
     app.show_page(Timetable.__name__)
 elif not os.path.exists(materials_path):

@@ -6,6 +6,7 @@ import time
 from threading import Thread
 from lib.theme import PRIMARY_COLOR
 import subprocess
+import psutil
 
 
 class Studying(tk.Frame):
@@ -103,11 +104,21 @@ class Studying(tk.Frame):
 
     def check_file_open(self, file_path):
         if os.name == "nt":  # Windows compliant check
+            # try:
+            #     with open(file_path, "rb+"):
+            #         return False
+            # except Exception:
+            #     return True
+            abs_path = os.path.abspath(file_path)
             try:
-                with open(file_path, "rb+"):
-                    return False
+                for proc in psutil.process_iter(["open_files"]):
+                    files = proc.info.get("open_files") or []
+                    for f in files:
+                        if os.path.abspath(f.path) == abs_path:
+                            return True
+                return False
             except Exception:
-                return True
+                return False
         else:
             try:
                 # Using lsof for non-Windows systems
