@@ -26,6 +26,7 @@ class App(tk.Tk):
         self.title("SmartStudy")
         self.geometry("1000x800")
         self.pages = {}
+        self.auto_close = False  # Global close mode flag
 
         # Container for pages
         container = tk.Frame(self)

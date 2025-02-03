@@ -6,7 +6,6 @@ import time
 from threading import Thread
 from lib.theme import PRIMARY_COLOR
 import subprocess
-import psutil
 
 
 class Studying(tk.Frame):
@@ -72,7 +71,7 @@ class Studying(tk.Frame):
             padx=20,
             pady=10,
         )
-        self.stop_button.pack()
+        self.stop_button.pack(side=tk.RIGHT, padx=5)
 
     def update_study_info(self):
         studying = self.parent.master.studying
@@ -104,21 +103,11 @@ class Studying(tk.Frame):
 
     def check_file_open(self, file_path):
         if os.name == "nt":  # Windows compliant check
-            # try:
-            #     with open(file_path, "rb+"):
-            #         return False
-            # except Exception:
-            #     return True
-            abs_path = os.path.abspath(file_path)
             try:
-                for proc in psutil.process_iter(["open_files"]):
-                    files = proc.info.get("open_files") or []
-                    for f in files:
-                        if os.path.abspath(f.path) == abs_path:
-                            return True
-                return False
+                with open(file_path, "rb+"):
+                    return False
             except Exception:
-                return False
+                return True
         else:
             try:
                 # Using lsof for non-Windows systems
@@ -132,11 +121,14 @@ class Studying(tk.Frame):
     def run_timer(self):
         while self.timer_running:
             studying = self.parent.master.studying
-            if studying and not self.check_file_open(studying["material"]):
+            if (
+                studying
+                and self.master.master.auto_close
+                and not self.check_file_open(studying["material"])
+            ):
                 print("Material file was closed, stopping timer...")
                 self.stop_timer()
                 return
-
             self.update_timer()
             time.sleep(1)
 

@@ -86,6 +86,18 @@ class Dashboard(tk.Frame):
                 fg=PRIMARY_COLOR,
             ).pack(pady=20)
 
+        # Add toggle button for close mode
+        toggle_frame = tk.Frame(container, bg=self.backgroundColor)
+        toggle_frame.pack(fill=tk.X, pady=5)
+        self.close_mode_button = tk.Button(
+            toggle_frame,
+            text="Manual Close",  # Default mode
+            command=self.toggle_close_mode,
+            bg=PRIMARY_COLOR,
+            fg="white",
+        )
+        self.close_mode_button.pack(side=tk.LEFT, padx=5)
+
         tk.Label(
             container,
             text="SMART STUDY DASHBOARD",
@@ -113,6 +125,14 @@ class Dashboard(tk.Frame):
         )
         materials_frame.pack(fill=tk.BOTH, expand=True, pady=10)
         self.show_materials(materials_frame)
+
+    def toggle_close_mode(self):
+        # Toggle the global auto_close flag from App
+        self.parent.master.auto_close = not self.parent.master.auto_close
+        if self.parent.master.auto_close:
+            self.close_mode_button.config(text="Automatic Close")
+        else:
+            self.close_mode_button.config(text="Manual Close")
 
     def show_unengaged_courses(self, parent):
         # Placeholder for tracking logic - will need to be implemented
