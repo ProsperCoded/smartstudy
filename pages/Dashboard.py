@@ -76,14 +76,16 @@ class Dashboard(tk.Frame):
         container = tk.Frame(self, bg=self.backgroundColor)
         container.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 
-        # Header
-        tk.Label(
-            container,
-            text=f"Welcome {self.profile['username'].split(' ')[0].title()}!",
-            font=("Helvatical", 15, "bold"),
-            bg=self.backgroundColor,
-            fg=PRIMARY_COLOR,
-        ).pack(pady=20)
+        if self.profile:
+            # Header
+            tk.Label(
+                container,
+                text=f"Welcome {self.profile['username'].split(' ')[0].title()}!",
+                font=("Helvatical", 15, "bold"),
+                bg=self.backgroundColor,
+                fg=PRIMARY_COLOR,
+            ).pack(pady=20)
+
         tk.Label(
             container,
             text="SMART STUDY DASHBOARD",
@@ -222,7 +224,7 @@ class Dashboard(tk.Frame):
             if os.name == "posix":  # For Linux
                 os.system(f'xdg-open "{material_path}"')
             elif os.name == "nt":  # For Windows
-                os.system(f"open {material_path}")
+                os.system(f'start  "{material_path}"')
             else:
                 messagebox.showerror("Error", "Can't open file on this OS!")
                 return

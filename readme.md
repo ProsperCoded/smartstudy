@@ -4,6 +4,18 @@ Smart Study is an app to effectively manage, track and study materials.
 
 Materials for each course are uploaded , and timetable for study is created at account creation for user.
 
+### SETUP
+
+- Create a virtual environment
+- Install all required packages
+- Run main.py
+
+### PACKAGES
+
+- matplotlib
+- pandas
+- openpyxl
+
 ### **Main Features:**
 
 1. Create Timetable
@@ -39,13 +51,3 @@ Materials for each course are uploaded , and timetable for study is created at a
 ### **TOOLS**
 
 Data will be persisted in files in **store directory**, using json serialization, which will serve as the local Database
-
-For GUI will be using an upgraded version of tkinter called **_[custom-tikinter](https://customtkinter.tomschimansky.com/) _ (you might need to set up a viertual environment🌚)**
-
-You can add extra tools and requirement you find necessary
-
-### PACKAGES
-
-- matplotlib
-- pandas
--

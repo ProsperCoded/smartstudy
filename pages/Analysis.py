@@ -102,9 +102,11 @@ class Analysis(tk.Frame):
                     hours = course_data[course_data["day"] == day]["hours"].sum()
                     y.append(hours)
 
-                ax.bar(
-                    [xi + i * bar_width for xi in x], y, width=bar_width, label=course
-                )
+                # Calculate x-positions for each bar in the group
+                bar_positions = [day_index + i * bar_width for day_index in x]
+
+                # Plot bars for this course
+                ax.bar(x=bar_positions, height=y, width=bar_width, label=course)
 
             ax.set_ylabel("Hours")
             ax.set_title("Study Hours by Course and Day")

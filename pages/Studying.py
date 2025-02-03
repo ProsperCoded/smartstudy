@@ -1,5 +1,5 @@
 import tkinter as tk
-from datetime import datetime, timedelta
+from datetime import timedelta
 import pandas as pd
 import os
 import time
@@ -102,15 +102,21 @@ class Studying(tk.Frame):
         self.timer_thread.start()
 
     def check_file_open(self, file_path):
-        try:
-            # Run lsof and check output
-            output = subprocess.check_output(
-                ["lsof", file_path], stderr=subprocess.DEVNULL
-            )
-            return True
-        except subprocess.CalledProcessError:
-            # lsof exits with 1 if the file is not open
-            return False
+        if os.name == "nt":  # Windows compliant check
+            try:
+                with open(file_path, "rb+"):
+                    return False
+            except Exception:
+                return True
+        else:
+            try:
+                # Using lsof for non-Windows systems
+                output = subprocess.check_output(
+                    ["lsof", file_path], stderr=subprocess.DEVNULL
+                )
+                return True
+            except subprocess.CalledProcessError:
+                return False
 
     def run_timer(self):
         while self.timer_running:
