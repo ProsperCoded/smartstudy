@@ -102,7 +102,8 @@ class Studying(tk.Frame):
         self.timer_thread.start()
 
     def check_file_open(self, file_path):
-        if os.name == "nt":  # Windows compliant check
+        if os.name == "nt":
+            # ! This doesn't work curretnly because of some WINDOWS limitations
             try:
                 with open(file_path, "rb+"):
                     return False
@@ -110,7 +111,6 @@ class Studying(tk.Frame):
                 return True
         else:
             try:
-                # Using lsof for non-Windows systems
                 output = subprocess.check_output(
                     ["lsof", file_path], stderr=subprocess.DEVNULL
                 )

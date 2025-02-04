@@ -26,7 +26,7 @@ class App(tk.Tk):
         self.title("SmartStudy")
         self.geometry("1000x800")
         self.pages = {}
-        self.auto_close = False  # Global close mode flag
+        self.auto_close = False
 
         # Container for pages
         container = tk.Frame(self)
@@ -38,7 +38,7 @@ class App(tk.Tk):
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
-        # variable to store what is currently being studied
+        # store what is currently being studied
         self.studying = None
         # * initialize and store all pages
         for page in pages:

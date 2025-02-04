@@ -15,6 +15,7 @@ Materials for each course are uploaded , and timetable for study is created at a
 - matplotlib
 - pandas
 - openpyxl
+- json
 
 ### **Main Features:**
 

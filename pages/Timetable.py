@@ -65,7 +65,7 @@ class Timetable(tk.Frame):
         )
         heading.grid(row=1, column=0, columnspan=len(self.days), pady=10)
         # Frame to hold days and their widgets
-        self.days_frame = tk.Frame(container)  # Changed from self.parent to self
+        self.days_frame = tk.Frame(container)  
         self.days_frame.grid(padx=10, pady=10)  # Use grid instead of pack
 
         for day in self.days:
@@ -92,20 +92,20 @@ class Timetable(tk.Frame):
             # Store the course frame in the dictionary
             self.courses[day].append(course_frame)
 
-            # Prefill the courses if they exist
+            # Prefill the courses if they exist in 
             if day in self.stored_courses:
                 for course in self.stored_courses[day]:
                     # Create a frame for the course and delete button
                     course_item_frame = tk.Frame(course_frame)
                     course_item_frame.pack(fill="x", pady=2)
 
-                    # Add course label
+                    #  course label
                     course_label = tk.Label(
                         course_item_frame, text=course["name"], font=("Arial", 10)
                     )
                     course_label.pack(side="left")
 
-                    # Add target hours field
+                    #  target hours field
                     hours_frame = tk.Frame(course_item_frame)
                     hours_frame.pack(side=tk.LEFT, padx=10)
 
@@ -119,7 +119,7 @@ class Timetable(tk.Frame):
                         "<KeyRelease>", lambda e: self.clear_general_target()
                     )
 
-                    # Add delete button
+                    #  delete button
                     delete_button = tk.Button(
                         course_item_frame,
                         text="✕",
@@ -132,7 +132,7 @@ class Timetable(tk.Frame):
                     )
                     delete_button.pack(side="right")
 
-        # Submit button to get all courses
+        # Submit button 
         submit_button = tk.Button(
             self.days_frame,
             text="Submit",
